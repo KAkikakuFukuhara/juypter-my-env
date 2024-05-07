@@ -1,0 +1,32 @@
+version: "3"
+services:
+  jupyter:
+    build:
+      context: .
+      args:
+        - UID=${UID}
+        - GID=${GID}
+        - UNAME=${UNAME}
+      dockerfile: ./docker/Dockerfile
+      network: host
+    env_file:
+      - .env
+    shm_size: '8gb'
+    image: myjupyter:v0.1
+    container_name: myjupyter-app
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./temp/workspace:/home/${UNAME}/workspace
+      - ~/.ssh:/home/${UNAME}/.ssh
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    working_dir: /home/${UNAME}/workspace
+    ports:
+      - 8888:8888
+    command: ~/.local/bin/jupyter notebook --no-browser --ip=0.0.0.0 --allow-root --NotebookApp.token=''

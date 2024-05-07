@@ -1,0 +1,11 @@
+# python
+__pycache__
+
+# others
+.env
+temp
+*.py
+*.ipynb
+*.jpg
+*.txt
+*.png
